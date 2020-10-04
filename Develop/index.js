@@ -2,48 +2,93 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const util = require('util');
 
+
+const api = require('./utils/app.js');
 const generatePage = require('./utils/generateMarkdown.js');
 
-const profileDataArgs = process.argv.slice(2);
+// const profileDataArgs = process.argv.slice(2);
 
-const [data] = profileDataArgs;
+// const [data] = profileDataArgs;
 
 
-inquirer
-    .prompt([
-        questions
-    ])
+
 // array of questions for user
 const questions = [
-    'What is the title of your project?',
-    'Write a description of your project.',
-    'If you have a link to a preview of your project, paste it here:',
-    'What is the URL to the repository?',
-    'How do you install the project?',
-    'How do you use this project?',
-    'Who contributed to this project?',
-    'What kind of license would you like your project to have?',
-    'How can others contribute to your project?',
-    'What is your GitHub username?',
-    'What is your email?',
-    'How do you test this project?'
+    {
+        type: 'input',
+        message: "What is the title of your project?",
+        name: 'title',
+        default: 'Project Title',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid project title is required.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "What is your GitHub username?",
+        name: 'username',
+        default: 'connietran-dev',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid GitHub username is required.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "What is the name of your GitHub repo?",
+        name: 'repo',
+        default: 'readme-generator',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid GitHub repo is required for a badge.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "Write a description of your project.",
+        name: 'description',
+        default: 'Project Description',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid project description is required.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "What are the steps required to install your project?",
+        name: 'installation'
+    },
+    {
+        type: 'input',
+        message: "Provide a link of an example of how you use your project.",
+        name: 'usage'
+    },
+    {
+        type: 'input',
+        message: "How can other developers contribute to your project?",
+        name: 'contributing'
+    },
+    {
+        type: 'input',
+        message: "Are there any tests written for your application? If yes, provide examples on how to run them.",
+        name: 'tests'
+    },
+    {
+        type: 'list',
+        message: "What license would you like for your project?",
+        choices: ['GNU AGPLv3', 'GNU GPLv3', 'GNU LGPLv3', 'Mozilla Public License 2.0', 'Apache License 2.0', 'MIT License', 'Boost Software License 1.0', 'The Unlicense'],
+        name: 'license'
+    }
 ];
-
-// destructured array into const
-const title = questions[0];
-const description = questions[1];
-const preview = questions[2];
-const url = questions[3];
-const install = questions[4];
-const use = questions[5];
-const whoContributed = questions[6];
-const license = questions[7];
-const contribute = questions[8];
-const username = questions[9];
-const email = questions[10];
-const test = questions[11];
-
-//console.log(title, description, preview, url, install, use, whoContributed, license, contribute, username, email, test);
 
 // function to write README file
 function writeToFile(fileName, data) {
@@ -59,7 +104,7 @@ function writeToFile(fileName, data) {
 const writeFileAsync = util.promisify(writeToFile);
 
 // function to initialize program
-function init() {
+async function init() {
     try {
         const userResponses = await inquirer.prompt(questions);
         console.log("Your responses: ", userResponses);
@@ -69,7 +114,7 @@ function init() {
         console.log("Your GitHub user info: ", userInfo);
 
         console.log("Generating your README next...")
-        const markdown = generateMarkdown(userResponses, userInfo);
+        const markdown = generatePage(userResponses, userInfo);
         console.log(markdown);
 
         await writeFileAsync('ExampleREADME.md', markdown);
