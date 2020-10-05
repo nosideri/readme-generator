@@ -87,10 +87,10 @@ if (userResponses.tests !== '') {
 draftMarkdown += 
 `
 
-## License 
+  ## License 
 
-${userResponses.license}
-`;
+  ${userResponses.license}
+  `;
 
 let draftDev = 
 `
@@ -98,7 +98,7 @@ let draftDev =
 ## Questions 
 
 For any questions, please contact me here:
- 
+
 [@${userInfo.login}](${userInfo.url}) `;
 
 if  (userResponses.email !== null) { 
