@@ -18,7 +18,6 @@ const questions = [
         type: 'input',
         message: "What is the title of your project?",
         name: 'title',
-        default: 'Project Title',
         validate: function (answer) {
             if (answer.length < 1) {
                 return console.log("A valid project title is required.");
@@ -28,9 +27,19 @@ const questions = [
     },
     {
         type: 'input',
+        message: "What is your email?",
+        name: 'email',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid email must be entered.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
         message: "What is your GitHub username?",
         name: 'username',
-        default: 'connietran-dev',
         validate: function (answer) {
             if (answer.length < 1) {
                 return console.log("A valid GitHub username is required.");
@@ -42,10 +51,9 @@ const questions = [
         type: 'input',
         message: "What is the name of your GitHub repo?",
         name: 'repo',
-        default: 'readme-generator',
         validate: function (answer) {
             if (answer.length < 1) {
-                return console.log("A valid GitHub repo is required for a badge.");
+                return console.log("A valid GitHub repo name is required.");
             }
             return true;
         }
@@ -54,7 +62,6 @@ const questions = [
         type: 'input',
         message: "Write a description of your project.",
         name: 'description',
-        default: 'Project Description',
         validate: function (answer) {
             if (answer.length < 1) {
                 return console.log("A valid project description is required.");
@@ -117,7 +124,7 @@ async function init() {
         const markdown = generatePage(userResponses, userInfo);
         console.log(markdown);
 
-        await writeFileAsync('ExampleREADME.md', markdown);
+        await writeFileAsync('README.md', markdown);
 
     } catch (error) {
         console.log(error)
